@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: cicd-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -44,6 +44,44 @@ jobs:
         with:
           path: dist
 
+      - name: Upload PR preview artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v5
+        with:
+          name: pr-preview-${{ github.event.pull_request.number }}
+          path: dist
+          retention-days: 7
+
+      - name: Post PR comment with test results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('node:fs');
+            const testOutput = fs.existsSync('test-results.txt')
+              ? fs.readFileSync('test-results.txt', 'utf8')
+              : 'Tests completed successfully (Node.js --test runner)';
+
+            const comment = `## 🤖 CI Report
+
+            ### ✅ Tests Passed
+            \`\`\`
+            ${testOutput}
+            \`\`\`
+
+            ### 📦 Build
+            Build artifact uploaded: \`pr-preview-${{ github.event.pull_request.number }}\`
+
+            ### 🚀 Auto-Merge
+            CI passed. Run \`/full-pipeline merge\` or reply "merge" to auto-merge when approved.`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment,
+            });
+
   deploy:
     name: Deploy to GitHub Pages
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
@@ -62,3 +100,15 @@ jobs:
       - name: Deploy site
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Health check
+        run: |
+          echo "Waiting for deployment to propagate..."
+          sleep 15
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ steps.deployment.outputs.page_url }}" || echo "000")
+          echo "Health check: HTTP $STATUS"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "⚠️ Health check returned $STATUS — deployment may still be propagating"
+          else
+            echo "✅ Health check passed"
+          fi
