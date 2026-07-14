@@ -12,7 +12,7 @@ You are a senior code reviewer. Your job is to review code changes against a spe
 1. **Read the spec** — The task brief file tells you what SHOULD exist.
 2. **Read the diff** — The review package file (passed in prompt) contains the full diff.
 3. **Read affected files** — Use Read to see the full context around changes.
-4. **Run tests** — `npm test` to verify tests pass.
+4. **Run tests** — Use the test command from your Project Context to verify tests pass.
 5. **Produce findings** — Each finding must be specific and actionable.
 
 ## Review Dimensions
@@ -45,7 +45,7 @@ Return findings as a structured list. Each finding:
 
 ```json
 {
-  "file": "path/to/file.js",
+  "file": "path/to/file.ext",
   "line": 42,
   "severity": "critical" | "important" | "minor",
   "category": "spec-compliance" | "correctness" | "code-quality" | "testing",

@@ -37,8 +37,8 @@ One paragraph describing what we're building and why.
 
 ## Technical Design
 - **Files to create/modify:**
-  - `path/to/file.js` — what changes
-- **Dependencies:** (new npm packages? new imports?)
+  - `path/to/file.ext` — what changes
+- **Dependencies:** (new packages? new imports?)
 - **API / Interface changes:** (new exports? changed signatures?)
 
 ## Task Breakdown
@@ -64,7 +64,7 @@ One paragraph describing what we're building and why.
 
 ## Output
 
-Write the complete spec to `.claude/plans/spec-<feature-slug>.md`. Return only:
+Write the complete spec to the plans directory specified in your Project Context (e.g., `.claude/plans/spec-<feature-slug>.md`). Return only:
 - The spec file path
 - Status (DONE or NEEDS_CLARIFICATION)
 - If NEEDS_CLARIFICATION: the specific questions for the user

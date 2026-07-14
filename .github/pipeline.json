@@ -1,0 +1,70 @@
+{
+  "$schema": "https://raw.githubusercontent.com/NeverBetterEnough/claude-pipeline/main/schemas/pipeline.schema.json",
+  "version": 1,
+  "meta": {
+    "generatedBy": "manual",
+    "description": "Pipeline configuration — single source of truth for all automation"
+  },
+
+  "project": {
+    "name": "github-pr-cicd-demo",
+    "language": "node"
+  },
+
+  "runtime": {
+    "installCommand": "npm ci",
+    "testCommand": "npm test",
+    "buildCommand": "npm run build",
+    "lintCommand": null,
+    "formatCommand": null,
+    "nodeVersion": "22"
+  },
+
+  "paths": {
+    "sourceDir": "src",
+    "testDir": "tests",
+    "buildOutputDir": "dist",
+    "plansDir": ".claude/plans"
+  },
+
+  "versionControl": {
+    "platform": "github",
+    "baseBranch": "main",
+    "featurePrefix": "feature/",
+    "defaultRemote": "origin"
+  },
+
+  "commit": {
+    "format": "conventional",
+    "featurePrefix": "feat",
+    "fixPrefix": "fix",
+    "testPrefix": "test",
+    "docsPrefix": "docs"
+  },
+
+  "deploy": {
+    "provider": "github-pages",
+    "validateCommand": "npm run check",
+    "healthCheck": {
+      "enabled": true,
+      "maxRetries": 10,
+      "retryDelaySeconds": 6
+    }
+  },
+
+  "pipeline": {
+    "skillName": "full-pipeline",
+    "artifactRetentionDays": 7,
+    "maxCIFixRetries": 5,
+    "mergeMethod": "squash",
+    "deleteBranchAfterMerge": true,
+    "prTitlePrefix": "feat"
+  },
+
+  "agents": {
+    "requirementAnalyst": { "model": "opus" },
+    "implementer": { "model": "sonnet" },
+    "codeReviewer": { "model": "sonnet" },
+    "lightweightTask": { "model": "haiku" }
+  }
+}

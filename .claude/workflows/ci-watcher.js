@@ -1,6 +1,6 @@
 export const meta = {
   name: 'ci-watcher',
-  description: 'Watch CI status for a PR — poll until pass/fail, auto-fix on failure, report status',
+  description: 'Watch CI status for a PR — poll until pass/fail, auto-fix on failure. All commands from config.',
   phases: [
     { title: 'Check CI' },
     { title: 'Analyze failures' },
@@ -9,9 +9,19 @@ export const meta = {
   ],
 }
 
-// args: { prNumber: string, maxRetries?: number }
+// args: { prNumber, maxRetries?, config }
+// config: { testCommand, buildCommand, installCommand, language, baseBranch }
 const pr = args.prNumber
 const maxRetries = args.maxRetries || 3
+const cfg = args.config || {}
+
+// Resolve commands from config, with fallbacks
+const testCmd = cfg.testCommand || 'npm test'
+const buildCmd = cfg.buildCommand || 'npm run build'
+const installCmd = cfg.installCommand || 'npm ci'
+const language = cfg.language || 'node'
+const baseBranch = cfg.baseBranch || 'main'
+
 let retries = 0
 
 async function checkCI() {
@@ -58,15 +68,17 @@ while (retries <= maxRetries) {
     const analysis = await agent(
       `CI checks failed for PR #${pr}. Run these commands:
 
-       1. gh pr checks ${pr} --json name,state,bucket,failureReason
-       2. For each FAILED check, run: gh pr view ${pr} --json statusCheckRollup
+       1. gh pr checks ${pr} --json name,state,bucket
+       2. For each FAILED check, get details with: gh pr view ${pr} --json statusCheckRollup
 
-       Analyze the failures and return a structured response with:
-       - List of failed checks and their reasons
-       - For each: can this be auto-fixed? (true/false)
-       - For auto-fixable: the exact fix needed
+       Analyze the failures and return a structured response.
 
-       The project uses: npm test (Node.js built-in test runner), npm run build`,
+       This project uses:
+       - Language: ${language}
+       - Test: \`${testCmd}\`
+       - Build: \`${buildCmd}\`
+       - Install: \`${installCmd}\`
+       - Base branch: ${baseBranch}`,
       { model: 'sonnet', schema: {
         type: 'object',
         properties: {
@@ -112,8 +124,8 @@ while (retries <= maxRetries) {
          Fix: ${f.fixDescription}
 
          After fixing:
-         1. Run "npm test" to verify
-         2. Run "npm run build" to verify
+         1. Run "${testCmd}" to verify
+         2. Run "${buildCmd}" to verify
          3. git add -A
          4. git commit -m "fix: ${f.fixDescription}"
          5. git push

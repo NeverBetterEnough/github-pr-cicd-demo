@@ -1,6 +1,6 @@
 export const meta = {
   name: 'implementation-pipeline',
-  description: 'Run subagent-driven development for multiple tasks: implement → review → fix → re-review',
+  description: 'Run subagent-driven development for multiple tasks: implement → review → fix → re-review. All commands from config.',
   phases: [
     { title: 'Setup' },
     { title: 'Implement' },
@@ -10,10 +10,31 @@ export const meta = {
   ],
 }
 
-// args: { tasks: [{ id, title, description, files }], baseBranch: string, featureSlug?: string }
+// args: { tasks, config, baseBranch?, featureSlug? }
+// config: { testCommand, buildCommand, installCommand, language, featurePrefix, plansDir }
 const tasks = args.tasks || []
+const cfg = args.config || {}
 const baseBranch = args.baseBranch || 'main'
 const featureSlug = args.featureSlug || tasks.map(t => t.id).join('-')
+
+// Resolve commands from config, with fallbacks for backward compatibility
+const testCmd = cfg.testCommand || 'npm test'
+const buildCmd = cfg.buildCommand || 'npm run build'
+const installCmd = cfg.installCommand || 'npm ci'
+const plansDir = cfg.plansDir || '.claude/plans'
+const featurePrefix = cfg.featurePrefix || 'feature/'
+const language = cfg.language || 'node'
+
+// Project context block injected into every agent prompt
+const projectContext = `
+## Project Context
+- Language: ${language}
+- Test command: \`${testCmd}\`
+- Build command: \`${buildCmd}\`
+- Install command: \`${installCmd}\`
+
+Use the commands above. Do NOT assume "npm test" or any other tool.
+`
 
 if (tasks.length === 0) {
   log('No tasks to implement')
@@ -21,12 +42,12 @@ if (tasks.length === 0) {
 }
 
 phase('Setup')
-// Generate branch name from task IDs (Date.now is unavailable in Workflow sandbox)
-const branchName = `feature/${featureSlug}`
-log(`Branch: ${branchName}`)
+const branchName = `${featurePrefix}${featureSlug}`
+log(`Branch: ${branchName} | Base: ${baseBranch} | Lang: ${language}`)
 
 await agent(
-  `Create and switch to a new branch:
+  `${projectContext}
+  Create and switch to a new branch:
    git checkout -b ${branchName}
    git push -u origin ${branchName}`,
   { model: 'haiku', effort: 'low' }
@@ -39,13 +60,13 @@ for (const task of tasks) {
   log(`📝 Task ${task.id}: ${task.title}`)
 
   const BASE = await agent(
-    `Run: git rev-parse HEAD
-     Return ONLY the commit hash.`,
+    `Run: git rev-parse HEAD. Return ONLY the commit hash.`,
     { model: 'haiku', effort: 'low' }
   )
 
   const impl = await agent(
-    `You are an implementer. Your task:
+    `${projectContext}
+     You are an implementer. Your task:
 
      TASK: ${task.title}
      DESCRIPTION: ${task.description}
@@ -55,8 +76,8 @@ for (const task of tasks) {
      1. Read the files you need to modify
      2. Write tests first
      3. Implement the changes
-     4. Run "npm test" — all tests must pass
-     5. Run "npm run build" to verify build
+     4. Run "${testCmd}" — all tests must pass
+     5. Run "${buildCmd}" to verify build
      6. Self-review your diff
      7. git add -A && git commit -m "feat: ${task.title}"
      8. git push
@@ -65,7 +86,7 @@ for (const task of tasks) {
      - Follow the existing code style exactly
      - Do NOT change unrelated code
      - Every new function must handle edge cases
-     - Use conventional commit format
+     - Use the commands from Project Context above
 
      Return: status (DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED),
      commit hash, test summary, and any concerns.`,
@@ -90,27 +111,28 @@ for (const task of tasks) {
   )
 
   // Generate review package
-  const reviewPackage = await agent(
+  await agent(
     `Run these commands:
      git diff ${BASE.trim()}..${HEAD.trim()} --stat
      git diff ${BASE.trim()}..${HEAD.trim()} -U10
 
-     Write the FULL output to .claude/plans/review-${task.id}.diff
+     Write the FULL output to ${plansDir}/review-${task.id}.diff
 
      Return: "written" if successful`,
     { model: 'haiku', effort: 'low' }
   )
 
   const review = await agent(
-    `Review this task implementation.
+    `${projectContext}
+     Review this task implementation.
 
      TASK: ${task.title}
      DESCRIPTION: ${task.description}
 
-     Read the diff file at: .claude/plans/review-${task.id}.diff
+     Read the diff file at: ${plansDir}/review-${task.id}.diff
      Read the full source files mentioned in the diff.
 
-     Run "npm test" to verify tests pass.
+     Run "${testCmd}" to verify tests pass.
 
      Return your review as a structured object with:
      - specCompliance: "PASS" or "FAIL" (with reasons)
@@ -152,21 +174,21 @@ for (const task of tasks) {
     log(`    ⚠️ ${criticalFindings.length} critical/important findings — fixing...`)
 
     phase('Fix')
-    const fixResult = await agent(
-      `Fix the following review findings for task "${task.title}":
+    await agent(
+      `${projectContext}
+       Fix the following review findings for task "${task.title}":
 
-      ${criticalFindings.map((f, i) => `${i + 1}. [${f.severity}] ${f.file}:${f.line} — ${f.summary}\n   Fix: ${f.fix}`).join('\n')}
+       ${criticalFindings.map((f, i) => `${i + 1}. [${f.severity}] ${f.file}:${f.line} — ${f.summary}\n   Fix: ${f.fix}`).join('\n')}
 
-      After fixing ALL findings:
-      1. Run "npm test" — must pass
-      2. Run "npm run build" — must pass
-      3. git add -A && git commit -m "fix: address review findings for ${task.title}"
-      4. git push
+       After fixing ALL findings:
+       1. Run "${testCmd}" — must pass
+       2. Run "${buildCmd}" — must pass
+       3. git add -A && git commit -m "fix: address review findings for ${task.title}"
+       4. git push
 
-      Return: status and commit hash.`,
+       Do NOT change any behavior — only fix what's needed.`,
       { model: 'sonnet' }
     )
-    log(`    Fix status: ${fixResult?.trim() || 'done'}`)
 
     // Quick re-review of fixes
     const reReview = await agent(
@@ -191,10 +213,11 @@ for (const task of tasks) {
 }
 
 phase('Finalize')
-log(`\n📊 Pipeline complete: ${results.filter(r => r.status === 'DONE').length}/${tasks.length} tasks done`)
+const doneCount = results.filter(r => r.status === 'DONE').length
+log(`\n📊 Pipeline complete: ${doneCount}/${tasks.length} tasks done`)
 
 return {
   branch: branchName,
   results,
-  summary: `${results.filter(r => r.status === 'DONE').length}/${tasks.length} tasks completed`,
+  summary: `${doneCount}/${tasks.length} tasks completed`,
 }
