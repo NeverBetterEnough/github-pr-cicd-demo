@@ -145,6 +145,7 @@ Workflow(
 
 - CI pending → 持续轮询（每轮约 30-60 秒）
 - CI fail → 自动分析失败原因 → 尝试修复 → push → 重新等待
+- 权限类失败（403 `Resource not accessible by integration`）→ 自动给对应 job 加 `issues: write` / `pull-requests: write` permissions → commit → push → 重新监控
 - 无法自动修复 → 报告用户，暂停
 - CI pass → 进入审批门
 
