@@ -1,7 +1,8 @@
 import {
   add,
   subtract,
-  multiply
+  multiply,
+  divide
 } from './calculator.js';
 
 const firstInput = document.querySelector('#first-number');
@@ -20,7 +21,8 @@ form.addEventListener('submit', (event) => {
   const operations = {
     add,
     subtract,
-    multiply
+    multiply,
+    divide
   };
 
   const calculate = operations[operator];
@@ -30,7 +32,10 @@ form.addEventListener('submit', (event) => {
     return;
   }
 
-  const result = calculate(first, second);
-
-  resultOutput.textContent = String(result);
+  try {
+    const result = calculate(first, second);
+    resultOutput.textContent = String(result);
+  } catch (err) {
+    resultOutput.textContent = err.message;
+  }
 });
