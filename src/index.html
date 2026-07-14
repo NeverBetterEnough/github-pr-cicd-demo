@@ -1,45 +1,49 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GitHub PR CI/CD 体验项目</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <main class="card">
-      <p class="eyebrow">GitHub Actions Demo</p>
-      <h1>迷你计算器</h1>
-      <p>这个页面由合并到 main 分支后的 CD 工作流自动发布。</p>
 
-      <form id="calculator-form">
-        <label>
-          第一个数字
-          <input id="first-number" type="number" value="8" required />
-        </label>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub PR CI/CD 体验项目</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
 
-        <label>
-          运算
-          <select id="operator">
-            <option value="add">加法</option>
-            <option value="subtract">减法</option>
-          </select>
-        </label>
+<body>
+  <main class="card">
+    <p class="eyebrow">GitHub Actions Demo</p>
+    <h1>迷你计算器</h1>
+    <p>这个页面由合并到 main 分支后的 CD 工作流自动发布。</p>
 
-        <label>
-          第二个数字
-          <input id="second-number" type="number" value="3" required />
-        </label>
+    <form id="calculator-form">
+      <label>
+        第一个数字
+        <input id="first-number" type="number" value="8" required />
+      </label>
 
-        <button type="submit">计算</button>
-      </form>
+      <label>
+        运算
+        <select id="operator">
+          <option value="add">加法</option>
+          <option value="subtract">减法</option>
+          <option value="multiply">乘法</option>
+        </select>
+      </label>
 
-      <section class="result-panel">
-        <span>结果</span>
-        <strong id="result">11</strong>
-      </section>
-    </main>
+      <label>
+        第二个数字
+        <input id="second-number" type="number" value="3" required />
+      </label>
 
-    <script type="module" src="./app.js"></script>
-  </body>
+      <button type="submit">计算</button>
+    </form>
+
+    <section class="result-panel">
+      <span>结果</span>
+      <strong id="result">11</strong>
+    </section>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+
 </html>
