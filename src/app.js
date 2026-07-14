@@ -1,4 +1,8 @@
-import { add, subtract } from './calculator.js';
+import {
+  add,
+  subtract,
+  multiply
+} from './calculator.js';
 
 const firstInput = document.querySelector('#first-number');
 const secondInput = document.querySelector('#second-number');
@@ -13,9 +17,20 @@ form.addEventListener('submit', (event) => {
   const second = Number(secondInput.value);
   const operator = operatorSelect.value;
 
-  const result = operator === 'add'
-    ? add(first, second)
-    : subtract(first, second);
+  const operations = {
+    add,
+    subtract,
+    multiply
+  };
+
+  const calculate = operations[operator];
+
+  if (!calculate) {
+    resultOutput.textContent = '不支持的运算';
+    return;
+  }
+
+  const result = calculate(first, second);
 
   resultOutput.textContent = String(result);
 });
