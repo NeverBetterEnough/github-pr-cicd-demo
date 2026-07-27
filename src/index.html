@@ -9,6 +9,7 @@
 <body>
   <div class="calculator">
     <div class="mode-bar">
+      <button class="mode-btn" id="btn-adv" data-mode="adv" title="高级模式">𝑓</button>
       <button class="mode-btn active" data-mode="calc" title="标准计算">🔢</button>
       <button class="mode-btn" data-mode="base" title="进制转换">①⑥</button>
     </div>
@@ -38,6 +39,26 @@
       <button class="btn-num wide" data-action="digit" data-value="0">0</button>
       <button class="btn-num" data-action="decimal">.</button>
       <button class="btn-eq" data-action="equals">=</button>
+    </div>
+
+    <div class="adv-buttons" id="panel-adv" style="display:none">
+      <button class="btn-adv" data-action="adv" data-value="sin">sin</button>
+      <button class="btn-adv" data-action="adv" data-value="cos">cos</button>
+      <button class="btn-adv" data-action="adv" data-value="tan">tan</button>
+      <button class="btn-adv-const" data-action="constant" data-value="pi">π</button>
+
+      <button class="btn-adv" data-action="adv" data-value="log10">log</button>
+      <button class="btn-adv" data-action="adv" data-value="ln">ln</button>
+      <button class="btn-adv" data-action="adv" data-value="power">xⁿ</button>
+      <button class="btn-adv-const" data-action="constant" data-value="e">e</button>
+
+      <button class="btn-adv" data-action="adv" data-value="sqrt">√</button>
+      <button class="btn-adv" data-action="adv" data-value="cbrt">³√</button>
+      <button class="btn-adv" data-action="adv" data-value="square">x²</button>
+      <button class="btn-adv" data-action="adv" data-value="reciprocal">¹⁄ₓ</button>
+
+      <button class="btn-adv" data-action="adv" data-value="factorial">n!</button>
+      <button class="btn-func" data-action="delete">⌫</button>
     </div>
 
     <div class="base-panel" id="panel-base" style="display:none">

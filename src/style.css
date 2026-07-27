@@ -25,20 +25,23 @@ body {
 
 .mode-btn {
   height: 32px;
-  width: 40px;
+  min-width: 38px;
   border: none;
   border-radius: 8px;
   background: transparent;
-  font-size: 16px;
+  color: #94a3b8;
+  font-size: 15px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.mode-btn:hover { background: #334155; }
-.mode-btn.active { background: #334155; }
+.mode-btn:hover { background: #334155; color: #e2e8f0; }
+.mode-btn.active { background: #334155; color: #f1f5f9; }
+.mode-btn.adv-on { background: #f59e0b33; color: #f59e0b; }
+.mode-btn.adv-on:hover { background: #f59e0b44; }
 
 /* ========== 显示屏 ========== */
 
@@ -48,16 +51,16 @@ body {
   font-size: 40px;
   font-weight: 300;
   text-align: right;
-  padding: 16px 16px;
+  padding: 14px 16px;
   border-radius: 12px;
   margin-bottom: 14px;
-  min-height: 76px;
+  min-height: 72px;
   word-break: break-all;
   line-height: 1.2;
   overflow-x: auto;
 }
 
-/* ========== 计算器按钮 ========== */
+/* ========== 基础按钮 ========== */
 
 .buttons {
   display: grid;
@@ -65,24 +68,44 @@ body {
   gap: 10px;
 }
 
-.buttons button {
-  height: 56px;
+.buttons button, .adv-buttons button {
+  height: 50px;
   border: none;
-  border-radius: 12px;
-  font-size: 22px;
+  border-radius: 10px;
+  font-size: 20px;
   font-weight: 500;
   cursor: pointer;
   transition: filter 0.15s;
   user-select: none;
 }
 
-.buttons button:active { filter: brightness(1.4); }
+.buttons button:active, .adv-buttons button:active { filter: brightness(1.4); }
 
 .btn-num  { background: #334155; color: #f1f5f9; }
 .btn-func { background: #64748b; color: #f1f5f9; }
 .btn-op   { background: #f59e0b; color: #fff; }
 .btn-eq   { background: #059669; color: #fff; }
 .wide     { grid-column: span 2; }
+
+/* ========== 高级按钮 ========== */
+
+.adv-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #334155;
+}
+
+.adv-buttons button {
+  height: 44px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.btn-adv       { background: #475569; color: #e2e8f0; }
+.btn-adv-const { background: #334155; color: #f59e0b; font-weight: 600; }
 
 /* ========== 进制转换面板 ========== */
 

@@ -24,15 +24,77 @@ export function modulo(a, b) {
   return a % b;
 }
 
+// ========== 高级数学函数 ==========
+
+/** a^b */
+export function power(a, b) {
+  return Math.pow(a, b);
+}
+
+/** √a */
+export function sqrt(a) {
+  if (a < 0) throw new Error('不能对负数开平方根');
+  return Math.sqrt(a);
+}
+
+/** ³√a */
+export function cbrt(a) {
+  return Math.cbrt(a);
+}
+
+/** log₁₀(a) */
+export function log10(a) {
+  if (a <= 0) throw new Error('对数参数必须大于 0');
+  return Math.log10(a);
+}
+
+/** ln(a) */
+export function ln(a) {
+  if (a <= 0) throw new Error('对数参数必须大于 0');
+  return Math.log(a);
+}
+
+/** a² */
+export function square(a) {
+  return a * a;
+}
+
+/** 1/a */
+export function reciprocal(a) {
+  if (a === 0) throw new Error('不能除以零');
+  return 1 / a;
+}
+
+/** n! (整数阶乘，n >= 0) */
+export function factorial(n) {
+  if (!Number.isInteger(n) || n < 0) throw new Error('阶乘只支持非负整数');
+  if (n === 0 || n === 1) return 1;
+  let result = 1;
+  for (let i = 2; i <= n; i++) result *= i;
+  return result;
+}
+
+/** sin(度) */
+export function sin(a) {
+  return Math.sin(a * Math.PI / 180);
+}
+
+/** cos(度) */
+export function cos(a) {
+  return Math.cos(a * Math.PI / 180);
+}
+
+/** tan(度) */
+export function tan(a) {
+  // 90°, 270° etc 无定义
+  if ((a - 90) % 180 === 0) throw new Error('tan 在该角度无定义');
+  return Math.tan(a * Math.PI / 180);
+}
+
+// ========== 进制转换 ==========
+
 const DIGITS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-/**
- * 进制转换：将数值从源进制转换为目标进制
- * @param {string|number} value - 待转换的值（十进制可用数字，其他进制用字符串）
- * @param {number} fromBase - 源进制（2-36）
- * @param {number} toBase - 目标进制（2-36）
- * @returns {string} 转换后的字符串（大写）
- */
 export function convertBase(value, fromBase, toBase) {
   if (!Number.isInteger(fromBase) || fromBase < 2 || fromBase > 36) {
     throw new Error(`源进制必须在 2-36 之间，收到: ${fromBase}`);
@@ -42,8 +104,6 @@ export function convertBase(value, fromBase, toBase) {
   }
 
   const strValue = String(value).toUpperCase();
-
-  // 验证输入字符串中每个字符都在源进制有效范围内
   const validDigits = DIGITS.slice(0, fromBase);
   for (let i = 0; i < strValue.length; i++) {
     const ch = strValue[i];
