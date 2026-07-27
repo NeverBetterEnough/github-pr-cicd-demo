@@ -1,93 +1,66 @@
 <!doctype html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GitHub PR CI/CD 体验项目</title>
+  <title>计算器</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
-
 <body>
-  <main class="card">
-    <p class="eyebrow">GitHub Actions Demo</p>
-    <h1>迷你计算器</h1>
-    <p>这个页面由合并到 main 分支后的 CD 工作流自动发布。</p>
+  <div class="calculator">
+    <div class="mode-bar">
+      <button class="mode-btn active" data-mode="calc" title="标准计算">🔢</button>
+      <button class="mode-btn" data-mode="base" title="进制转换">①⑥</button>
+    </div>
+    <div class="display" id="display">0</div>
 
-    <form id="calculator-form">
-      <label>
-        第一个数字
-        <input id="first-number" type="number" value="8" required />
-      </label>
+    <div class="buttons" id="panel-calc">
+      <button class="btn-func" data-action="clear">C</button>
+      <button class="btn-func" data-action="negate">±</button>
+      <button class="btn-func" data-action="percent">%</button>
+      <button class="btn-op" data-action="operator" data-value="divide">÷</button>
 
-      <label>
-        运算
-        <select id="operator">
-          <option value="add">加法</option>
-          <option value="subtract">减法</option>
-          <option value="multiply">乘法</option>
-          <option value="divide">除法</option>
-        </select>
-      </label>
+      <button class="btn-num" data-action="digit" data-value="7">7</button>
+      <button class="btn-num" data-action="digit" data-value="8">8</button>
+      <button class="btn-num" data-action="digit" data-value="9">9</button>
+      <button class="btn-op" data-action="operator" data-value="multiply">×</button>
 
-      <label>
-        第二个数字
-        <input id="second-number" type="number" value="3" required />
-      </label>
+      <button class="btn-num" data-action="digit" data-value="4">4</button>
+      <button class="btn-num" data-action="digit" data-value="5">5</button>
+      <button class="btn-num" data-action="digit" data-value="6">6</button>
+      <button class="btn-op" data-action="operator" data-value="subtract">−</button>
 
-      <button type="submit">计算</button>
-    </form>
+      <button class="btn-num" data-action="digit" data-value="1">1</button>
+      <button class="btn-num" data-action="digit" data-value="2">2</button>
+      <button class="btn-num" data-action="digit" data-value="3">3</button>
+      <button class="btn-op" data-action="operator" data-value="add">+</button>
 
-    <section class="result-panel">
-      <span>结果</span>
-      <strong id="result">11</strong>
-    </section>
-  </main>
+      <button class="btn-num wide" data-action="digit" data-value="0">0</button>
+      <button class="btn-num" data-action="decimal">.</button>
+      <button class="btn-eq" data-action="equals">=</button>
+    </div>
 
-  <main class="card">
-    <h2>进制转换</h2>
-    <p>在二进制、八进制、十进制、十六进制等之间自由转换（支持 2-36 进制）。</p>
-
-    <form id="converter-form">
-      <label>
-        待转换数值
-        <input id="convert-value" type="text" value="255" placeholder="输入数值" required />
-      </label>
-
-      <div class="base-row">
-        <label class="base-label">
-          源进制
-          <input id="from-base" type="number" value="10" min="2" max="36" required />
-        </label>
-
-        <span class="base-arrow">→</span>
-
-        <label class="base-label">
-          目标进制
-          <input id="to-base" type="number" value="16" min="2" max="36" required />
-        </label>
+    <div class="base-panel" id="panel-base" style="display:none">
+      <div class="base-inputs">
+        <div class="base-field">
+          <label>数值</label>
+          <input id="convert-value" type="text" value="255" placeholder="输入数值" />
+        </div>
+        <div class="base-row-inline">
+          <div class="base-field">
+            <label>源进制</label>
+            <input id="from-base" type="number" value="10" min="2" max="36" />
+          </div>
+          <span class="arrow">→</span>
+          <div class="base-field">
+            <label>目标进制</label>
+            <input id="to-base" type="number" value="16" min="2" max="36" />
+          </div>
+        </div>
+        <button class="btn-convert" id="btn-convert">转换</button>
       </div>
-
-      <button type="submit">转换</button>
-    </form>
-
-    <section class="result-panel">
-      <span>结果</span>
-      <strong id="convert-result">FF</strong>
-    </section>
-
-    <details class="common-bases">
-      <summary>常用进制参考</summary>
-      <ul>
-        <li>二进制 (Base 2)：0-1</li>
-        <li>八进制 (Base 8)：0-7</li>
-        <li>十进制 (Base 10)：0-9</li>
-        <li>十六进制 (Base 16)：0-9, A-F</li>
-      </ul>
-    </details>
-  </main>
-
+    </div>
+  </div>
   <script type="module" src="./app.js"></script>
 </body>
-
 </html>
