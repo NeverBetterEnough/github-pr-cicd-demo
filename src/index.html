@@ -44,6 +44,49 @@
     </section>
   </main>
 
+  <main class="card">
+    <h2>进制转换</h2>
+    <p>在二进制、八进制、十进制、十六进制等之间自由转换（支持 2-36 进制）。</p>
+
+    <form id="converter-form">
+      <label>
+        待转换数值
+        <input id="convert-value" type="text" value="255" placeholder="输入数值" required />
+      </label>
+
+      <div class="base-row">
+        <label class="base-label">
+          源进制
+          <input id="from-base" type="number" value="10" min="2" max="36" required />
+        </label>
+
+        <span class="base-arrow">→</span>
+
+        <label class="base-label">
+          目标进制
+          <input id="to-base" type="number" value="16" min="2" max="36" required />
+        </label>
+      </div>
+
+      <button type="submit">转换</button>
+    </form>
+
+    <section class="result-panel">
+      <span>结果</span>
+      <strong id="convert-result">FF</strong>
+    </section>
+
+    <details class="common-bases">
+      <summary>常用进制参考</summary>
+      <ul>
+        <li>二进制 (Base 2)：0-1</li>
+        <li>八进制 (Base 8)：0-7</li>
+        <li>十进制 (Base 10)：0-9</li>
+        <li>十六进制 (Base 16)：0-9, A-F</li>
+      </ul>
+    </details>
+  </main>
+
   <script type="module" src="./app.js"></script>
 </body>
 

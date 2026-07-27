@@ -5,7 +5,8 @@ import {
   subtract,
   multiply,
   divide,
-  modulo
+  modulo,
+  convertBase
 } from '../src/calculator.js';
 
 test('add: 2 + 3 应等于 5', () => {
@@ -60,4 +61,95 @@ test('modulo: 负数取余 -10 % 3 应等于 -1', () => {
   assert.equal(modulo(-10, 3), -1);
 });
 
+// ========== 进制转换测试 ==========
 
+test('convertBase: 十进制 255 → 十六进制 FF', () => {
+  assert.equal(convertBase(255, 10, 16), 'FF');
+});
+
+test('convertBase: 二进制 1010 → 十进制 10', () => {
+  assert.equal(convertBase('1010', 2, 10), '10');
+});
+
+test('convertBase: 十六进制 FF → 二进制', () => {
+  assert.equal(convertBase('FF', 16, 2), '11111111');
+});
+
+test('convertBase: 八进制 77 → 十进制 63', () => {
+  assert.equal(convertBase('77', 8, 10), '63');
+});
+
+test('convertBase: 同进制转换 十进制 42 → 42', () => {
+  assert.equal(convertBase(42, 10, 10), '42');
+});
+
+test('convertBase: 零值转换', () => {
+  assert.equal(convertBase(0, 10, 2), '0');
+  assert.equal(convertBase('0', 2, 16), '0');
+});
+
+test('convertBase: 大数值 十六进制 → 十进制', () => {
+  assert.equal(convertBase('DEADBEEF', 16, 10), '3735928559');
+});
+
+test('convertBase: 36进制边界测试', () => {
+  assert.equal(convertBase('Z', 36, 10), '35');
+  assert.equal(convertBase(35, 10, 36), 'Z');
+});
+
+test('convertBase: 源进制非法（<2）应抛出错误', () => {
+  assert.throws(
+    () => convertBase(10, 1, 10),
+    /源进制必须在 2-36 之间/
+  );
+});
+
+test('convertBase: 源进制非法（>36）应抛出错误', () => {
+  assert.throws(
+    () => convertBase(10, 37, 10),
+    /源进制必须在 2-36 之间/
+  );
+});
+
+test('convertBase: 目标进制非法（<2）应抛出错误', () => {
+  assert.throws(
+    () => convertBase(10, 10, 0),
+    /目标进制必须在 2-36 之间/
+  );
+});
+
+test('convertBase: 目标进制非法（>36）应抛出错误', () => {
+  assert.throws(
+    () => convertBase(10, 10, 40),
+    /目标进制必须在 2-36 之间/
+  );
+});
+
+test('convertBase: 非整数进制应抛出错误', () => {
+  assert.throws(
+    () => convertBase(10, 10.5, 16),
+    /源进制必须在 2-36 之间/
+  );
+});
+
+test('convertBase: 无效的源进制数值', () => {
+  assert.throws(
+    () => convertBase('GHI', 16, 10),
+    /不是有效的 16 进制数/
+  );
+});
+
+test('convertBase: 二进制含非法字符', () => {
+  assert.throws(
+    () => convertBase('102', 2, 10),
+    /不是有效的 2 进制数/
+  );
+});
+
+test('convertBase: 字符串形式的十进制数值', () => {
+  assert.equal(convertBase('100', 10, 2), '1100100');
+});
+
+test('convertBase: 负数转换', () => {
+  assert.equal(convertBase(-10, 10, 16), '-A');
+});
