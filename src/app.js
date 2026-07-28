@@ -1,5 +1,5 @@
 import {
-  add, subtract, multiply, divide,
+  add, subtract, multiply, divide, modulo,
   power, sqrt, cbrt, log10, ln, square, reciprocal, factorial,
   sin, cos, tan,
   convertBase
@@ -133,7 +133,7 @@ function handleOperator(op) {
 }
 
 function compute(a, b, operator) {
-  const ops = { add, subtract, multiply, divide };
+  const ops = { add, subtract, multiply, divide, modulo };
   try { return ops[operator](a, b); }
   catch (err) { return err.message; }
 }
@@ -260,7 +260,7 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === '-') handleOperator('subtract');
   else if (e.key === '*') handleOperator('multiply');
   else if (e.key === '/') { e.preventDefault(); handleOperator('divide'); }
-  else if (e.key === '%') percent();
+  else if (e.key === '%') handleOperator('modulo');
   else if (e.key === 'Backspace') doDelete();
 });
 
