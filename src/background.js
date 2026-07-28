@@ -20,7 +20,7 @@ export const MATH_SYMBOLS = [
 export const DEFAULT_PARTICLE_COUNT = 30;
 
 /** 网格线颜色（半透明） */
-export const GRID_COLOR = 'rgba(148, 163, 184, 0.06)';
+export const GRID_COLOR = 'rgba(100, 116, 139, 0.10)';
 /** 网格间距（px） */
 export const GRID_SPACING = 50;
 
@@ -39,7 +39,7 @@ export function createParticle(canvasWidth, canvasHeight) {
     vx: (Math.random() - 0.5) * 0.3,  // 水平漂移速度（px/frame）
     vy: (Math.random() - 0.5) * 0.3,  // 垂直漂移速度
     size: 14 + Math.random() * 20,     // 字号 14–34
-    opacity: 0.04 + Math.random() * 0.06, // 透明度 0.04–0.10
+    opacity: 0.08 + Math.random() * 0.10, // 透明度 0.08–0.18
     rotation: Math.random() * Math.PI * 2,
     rotationSpeed: (Math.random() - 0.5) * 0.002,
     // 定时换符号
@@ -120,7 +120,7 @@ function drawParticles(ctx, particles) {
     ctx.translate(p.x, p.y);
     ctx.rotate(p.rotation);
     ctx.font = `${p.size}px "Segoe UI Symbol", "Arial Unicode MS", sans-serif`;
-    ctx.fillStyle = `rgba(148, 163, 184, ${p.opacity})`;
+    ctx.fillStyle = `rgba(100, 116, 139, ${p.opacity})`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(p.symbol, 0, 0);
