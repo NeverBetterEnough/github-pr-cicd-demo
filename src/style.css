@@ -24,9 +24,6 @@ body {
 .calculator {
   position: relative;
   z-index: 1;
-}
-
-.calculator {
   background: #1e293b;
   border-radius: 20px;
   padding: 20px;
