@@ -1,9 +1,13 @@
+import { initBackground } from './background.js';
 import {
   add, subtract, multiply, divide, modulo,
   power, sqrt, cbrt, log10, ln, square, reciprocal, factorial,
   sin, cos, tan,
   convertBase
 } from './calculator.js';
+
+// 启动数学主题背景动画
+initBackground();
 
 const display = document.querySelector('#display');
 const modeBtns = document.querySelectorAll('.mode-btn[data-mode="calc"], .mode-btn[data-mode="base"]');
