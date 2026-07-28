@@ -76,10 +76,10 @@ test('createParticle: 字号应在 14–34 之间', () => {
   }
 });
 
-test('createParticle: 透明度应在 0.04–0.10 之间', () => {
+test('createParticle: 透明度应在 0.08–0.18 之间', () => {
   for (let i = 0; i < 20; i++) {
     const p = createParticle(800, 600);
-    assert.ok(p.opacity >= 0.04 && p.opacity <= 0.10, `opacity=${p.opacity} 超出 [0.04, 0.10]`);
+    assert.ok(p.opacity >= 0.08 && p.opacity <= 0.18, `opacity=${p.opacity} 超出 [0.08, 0.18]`);
   }
 });
 
