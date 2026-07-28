@@ -33,7 +33,17 @@ modeBtns.forEach(btn => {
 
 btnAdv.addEventListener('click', () => {
   advancedMode = !advancedMode;
+
   if (advancedMode) {
+    // 自动切到计算器模式
+    if (currentMode !== 'calc') {
+      currentMode = 'calc';
+      modeBtns.forEach(b => b.classList.remove('active'));
+      document.querySelector('.mode-btn[data-mode="calc"]').classList.add('active');
+      panelCalc.style.display = '';
+      panelBase.style.display = 'none';
+      updateDisplay();
+    }
     btnAdv.classList.add('adv-on');
   } else {
     btnAdv.classList.remove('adv-on');
