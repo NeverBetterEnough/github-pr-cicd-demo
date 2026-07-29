@@ -5,16 +5,21 @@ import {
   sin, cos, tan,
   convertBase
 } from './calculator.js';
+import { playClickSound } from './sound.js';
 
 // 启动数学主题背景动画
 initBackground();
 
-// ========== 按钮点击动画反馈 ==========
+// ========== 按钮点击反馈：音效 + 动画 ==========
 
 document.querySelector('.calculator').addEventListener('click', (e) => {
   const btn = e.target.closest('button');
   if (!btn) return;
-  // 先移除再添加以重新触发动画
+
+  // 短促点击音
+  playClickSound();
+
+  // 弹出动画（先移除再添加以重新触发）
   btn.classList.remove('btn-pop');
   void btn.offsetWidth; // 强制回流，确保动画重新播放
   btn.classList.add('btn-pop');
