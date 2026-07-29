@@ -318,3 +318,59 @@ btnConvert.addEventListener('click', (e) => {
 });
 
 updateDisplay();
+
+// ========== 拖拽调整计算器大小 ==========
+
+const calculator = document.querySelector('.calculator');
+const resizeHandle = document.querySelector('.resize-handle');
+
+const MIN_WIDTH = 300;
+const MIN_HEIGHT = 200;
+
+let isResizing = false;
+let startX = 0;
+let startY = 0;
+let startWidth = 0;
+let startHeight = 0;
+
+function onResizeStart(e) {
+  e.preventDefault();
+  isResizing = true;
+
+  const point = e.touches ? e.touches[0] : e;
+  startX = point.clientX;
+  startY = point.clientY;
+  startWidth = calculator.offsetWidth;
+  startHeight = calculator.offsetHeight;
+
+  document.body.style.userSelect = 'none';
+  document.body.style.cursor = 'nwse-resize';
+}
+
+function onResizeMove(e) {
+  if (!isResizing) return;
+
+  const point = e.touches ? e.touches[0] : e;
+  const dx = point.clientX - startX;
+  const dy = point.clientY - startY;
+
+  const newWidth = Math.max(MIN_WIDTH, startWidth + dx);
+  const newHeight = Math.max(MIN_HEIGHT, startHeight + dy);
+
+  calculator.style.width = newWidth + 'px';
+  calculator.style.height = newHeight + 'px';
+}
+
+function onResizeEnd() {
+  if (!isResizing) return;
+  isResizing = false;
+  document.body.style.userSelect = '';
+  document.body.style.cursor = '';
+}
+
+resizeHandle.addEventListener('mousedown', onResizeStart);
+resizeHandle.addEventListener('touchstart', onResizeStart, { passive: false });
+document.addEventListener('mousemove', onResizeMove);
+document.addEventListener('touchmove', onResizeMove, { passive: false });
+document.addEventListener('mouseup', onResizeEnd);
+document.addEventListener('touchend', onResizeEnd);

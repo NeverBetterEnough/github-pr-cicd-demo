@@ -120,3 +120,42 @@ test('convert button should have transform in transition', () => {
   assert.ok(transition !== null, '.btn-convert should have a transition property');
   assert.ok(transition.includes('transform'), `.btn-convert transition should include transform, got: ${transition}`);
 });
+
+// ========== Resize handle tests ==========
+
+test('resize handle should exist and have nwse-resize cursor', () => {
+  const rule = extractRule('.resize-handle');
+  assert.ok(rule !== null, '.resize-handle class should exist');
+  const cursor = getProp(rule, 'cursor');
+  assert.ok(cursor !== null, '.resize-handle should have a cursor property');
+  assert.equal(cursor, 'nwse-resize', `.resize-handle cursor should be nwse-resize, got: ${cursor}`);
+});
+
+test('resize handle should be absolutely positioned', () => {
+  const rule = extractRule('.resize-handle');
+  const position = getProp(rule, 'position');
+  assert.ok(position !== null, '.resize-handle should have a position property');
+  assert.equal(position, 'absolute', `.resize-handle position should be absolute, got: ${position}`);
+});
+
+test('resize handle should have z-index to stay above content', () => {
+  const rule = extractRule('.resize-handle');
+  const zIndex = getProp(rule, 'z-index');
+  assert.ok(zIndex !== null, '.resize-handle should have a z-index property');
+  assert.ok(parseInt(zIndex, 10) >= 1, `.resize-handle z-index should be >= 1, got: ${zIndex}`);
+});
+
+test('resize handle should have transition for smooth hover effect', () => {
+  const rule = extractRule('.resize-handle');
+  const transition = getProp(rule, 'transition');
+  assert.ok(transition !== null, '.resize-handle should have a transition property');
+  assert.ok(transition.includes('opacity'), `.resize-handle transition should include opacity, got: ${transition}`);
+});
+
+test('resize handle hover should increase opacity', () => {
+  const rule = extractRule('.resize-handle:hover');
+  assert.ok(rule !== null, '.resize-handle:hover rule should exist');
+  const opacity = parseFloat(getProp(rule, 'opacity'));
+  assert.ok(!isNaN(opacity), '.resize-handle:hover should have an opacity property');
+  assert.ok(opacity > 0.5, `.resize-handle:hover opacity should be > 0.5 for visibility, got: ${opacity}`);
+});
