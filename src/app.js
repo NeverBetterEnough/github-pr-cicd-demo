@@ -5,9 +5,16 @@ import {
   sin, cos, tan,
   convertBase
 } from './calculator.js';
+import { playClickSound } from './sound.js';
 
 // 启动数学主题背景动画
 initBackground();
+
+// 全局点击音效：所有计算器按钮点击时播放短促反馈音
+document.querySelector('.calculator').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (btn) playClickSound();
+});
 
 const display = document.querySelector('#display');
 const modeBtns = document.querySelectorAll('.mode-btn[data-mode="calc"], .mode-btn[data-mode="base"]');
