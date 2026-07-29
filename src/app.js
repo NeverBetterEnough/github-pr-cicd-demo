@@ -272,6 +272,9 @@ document.addEventListener('keydown', (e) => {
   if (e.target.tagName === 'INPUT') return;
   if (currentMode !== 'calc') return;
 
+  // 按键音效反馈
+  playClickSound();
+
   if (e.key >= '0' && e.key <= '9') inputDigit(e.key);
   else if (e.key === '.') inputDecimal();
   else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') clearAll();
