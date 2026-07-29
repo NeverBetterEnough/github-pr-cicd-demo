@@ -47,11 +47,13 @@ body {
   color: #94a3b8;
   font-size: 18px;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.08s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+.mode-btn:active { transform: scale(0.93); }
 
 .mode-btn:hover { background: #334155; color: #e2e8f0; }
 .mode-btn.active { background: #334155; color: #f1f5f9; }
@@ -83,6 +85,18 @@ body {
   gap: 12px;
 }
 
+/* ========== 按钮点击动画 ========== */
+
+@keyframes btn-pop {
+  0%   { transform: scale(0.92); }
+  60%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.btn-pop {
+  animation: btn-pop 0.22s ease-out;
+}
+
 .buttons button, .adv-buttons button {
   height: 60px;
   border: none;
@@ -90,11 +104,14 @@ body {
   font-size: 24px;
   font-weight: 500;
   cursor: pointer;
-  transition: filter 0.15s;
+  transition: transform 0.08s ease, filter 0.15s;
   user-select: none;
 }
 
-.buttons button:active, .adv-buttons button:active { filter: brightness(1.4); }
+.buttons button:active, .adv-buttons button:active {
+  transform: scale(0.93);
+  filter: brightness(1.4);
+}
 
 .btn-num  { background: #334155; color: #f1f5f9; }
 .btn-func { background: #64748b; color: #f1f5f9; }
@@ -183,7 +200,7 @@ body {
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
-  transition: filter 0.15s;
+  transition: transform 0.08s ease, filter 0.15s;
 }
 
-.btn-convert:active { filter: brightness(1.3); }
+.btn-convert:active { transform: scale(0.93); filter: brightness(1.3); }
