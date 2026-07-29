@@ -69,3 +69,54 @@ test('mode buttons should have minimum height of 36px', () => {
   assert.ok(height !== null, '.mode-btn should have a height property');
   assert.ok(height >= 36, `.mode-btn height should be >= 36px, got ${height}px`);
 });
+
+// ========== Button click animation tests ==========
+
+test('btn-pop keyframe animation should exist', () => {
+  assert.ok(css.includes('@keyframes btn-pop'), 'CSS should contain @keyframes btn-pop');
+});
+
+test('btn-pop class should apply the animation', () => {
+  const rule = extractRule('.btn-pop');
+  assert.ok(rule !== null, '.btn-pop class should exist');
+  const anim = getProp(rule, 'animation');
+  assert.ok(anim !== null, '.btn-pop should have an animation property');
+  assert.ok(anim.includes('btn-pop'), `.btn-pop animation should reference btn-pop, got: ${anim}`);
+});
+
+test('buttons should have transform in transition', () => {
+  const rule = extractRule('.buttons button, .adv-buttons button');
+  const transition = getProp(rule, 'transition');
+  assert.ok(transition !== null, 'buttons should have a transition property');
+  assert.ok(transition.includes('transform'), `button transition should include transform, got: ${transition}`);
+});
+
+test('buttons should scale down on :active', () => {
+  const activeRule = extractRule('.buttons button:active, .adv-buttons button:active');
+  assert.ok(activeRule !== null, 'button :active rule should exist');
+  const transform = getProp(activeRule, 'transform');
+  assert.ok(transform !== null, 'button:active should have a transform property');
+  assert.ok(transform.includes('scale'), `button:active transform should include scale, got: ${transform}`);
+});
+
+test('mode buttons should have transform transition', () => {
+  const rule = extractRule('.mode-btn');
+  const transition = getProp(rule, 'transition');
+  assert.ok(transition !== null, '.mode-btn should have a transition property');
+  assert.ok(transition.includes('transform'), `.mode-btn transition should include transform, got: ${transition}`);
+});
+
+test('mode buttons should scale down on :active', () => {
+  const activeRule = extractRule('.mode-btn:active');
+  assert.ok(activeRule !== null, '.mode-btn:active rule should exist');
+  const transform = getProp(activeRule, 'transform');
+  assert.ok(transform !== null, '.mode-btn:active should have a transform property');
+  assert.ok(transform.includes('scale'), `.mode-btn:active transform should include scale, got: ${transform}`);
+});
+
+test('convert button should have transform in transition', () => {
+  const rule = extractRule('.btn-convert');
+  const transition = getProp(rule, 'transition');
+  assert.ok(transition !== null, '.btn-convert should have a transition property');
+  assert.ok(transition.includes('transform'), `.btn-convert transition should include transform, got: ${transition}`);
+});

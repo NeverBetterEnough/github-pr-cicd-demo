@@ -10,10 +10,19 @@ import { playClickSound } from './sound.js';
 // 启动数学主题背景动画
 initBackground();
 
-// 全局点击音效：所有计算器按钮点击时播放短促反馈音
+// ========== 按钮点击反馈：音效 + 动画 ==========
+
 document.querySelector('.calculator').addEventListener('click', (e) => {
   const btn = e.target.closest('button');
-  if (btn) playClickSound();
+  if (!btn) return;
+
+  // 短促点击音
+  playClickSound();
+
+  // 弹出动画（先移除再添加以重新触发）
+  btn.classList.remove('btn-pop');
+  void btn.offsetWidth; // 强制回流，确保动画重新播放
+  btn.classList.add('btn-pop');
 });
 
 const display = document.querySelector('#display');
