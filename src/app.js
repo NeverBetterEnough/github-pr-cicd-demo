@@ -9,6 +9,17 @@ import {
 // 启动数学主题背景动画
 initBackground();
 
+// ========== 按钮点击动画反馈 ==========
+
+document.querySelector('.calculator').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  // 先移除再添加以重新触发动画
+  btn.classList.remove('btn-pop');
+  void btn.offsetWidth; // 强制回流，确保动画重新播放
+  btn.classList.add('btn-pop');
+});
+
 const display = document.querySelector('#display');
 const modeBtns = document.querySelectorAll('.mode-btn[data-mode="calc"], .mode-btn[data-mode="base"]');
 const btnAdv = document.querySelector('#btn-adv');
