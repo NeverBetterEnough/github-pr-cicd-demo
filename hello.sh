@@ -8,6 +8,10 @@ error() {
     echo "Error: this is an error message" >&2
 }
 
+info() {
+    echo "Info: this is an info message" >&2
+}
+
 start() {
     echo "Hello from Paperclip Agent! [$(date '+%Y-%m-%d %H:%M:%S')]"
 }
