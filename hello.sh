@@ -4,6 +4,10 @@ warn() {
     echo "Warning: this is a warning message" >&2
 }
 
+error() {
+    echo "Error: this is an error message" >&2
+}
+
 start() {
     echo "Hello from Paperclip Agent! [$(date '+%Y-%m-%d %H:%M:%S')]"
 }
