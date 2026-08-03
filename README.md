@@ -96,3 +96,13 @@ npm run check         # test + build
 npm run predeploy     # 部署前检查清单
 npm run deploy:verify # 部署后健康检查
 ```
+
+## Multica PR Auto-Linking Demo
+
+This PR demonstrates how Multica automatically links GitHub PRs to Multica Issues.
+
+When this branch is pushed and a PR is opened:
+1. Multica scans the PR title/branch for "STA-6"
+2. It finds Issue STA-6 in the Staging Workspace
+3. The PR appears in the Issue sidebar and the Issue appears in the PR
+
