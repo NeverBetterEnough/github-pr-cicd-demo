@@ -1,0 +1,41 @@
+name: Route Issues by Label to Multica
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine target autopilot by label
+        id: route
+        run: |
+          # Get the label that was just added
+          NEW_LABEL="${{ github.event.label.name }}"
+
+          case "$NEW_LABEL" in
+            Coding)
+              echo "url=${{ secrets.CODING_AUTOPILOT_WEBHOOK_URL }}" >> $GITHUB_OUTPUT
+              echo "target=Coding Autopilot" >> $GITHUB_OUTPUT
+              ;;
+            test)
+              echo "url=${{ secrets.TESTING_AUTOPILOT_WEBHOOK_URL }}" >> $GITHUB_OUTPUT
+              echo "target=Testing Autopilot" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "Label '$NEW_LABEL' not routed, skipping dispatch"
+              echo "skip=true" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Dispatch to Multica
+        if: steps.route.outputs.skip != 'true'
+        run: |
+          echo "Dispatching to: ${{ steps.route.outputs.target }}"
+          curl -s -X POST "${{ steps.route.outputs.url }}" \
+            -H "Content-Type: application/json" \
+            -H "X-GitHub-Event: issues" \
+            -d '${{ toJson(github.event) }}'
+          echo ""
+          echo "Dispatch complete."
