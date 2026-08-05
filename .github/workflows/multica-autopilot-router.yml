@@ -15,6 +15,10 @@ jobs:
           NEW_LABEL="${{ github.event.label.name }}"
 
           case "$NEW_LABEL" in
+            Requirement)
+              echo "url=${{ secrets.REQUIREMENT_AUTOPILOT_WEBHOOK_URL }}" >> $GITHUB_OUTPUT
+              echo "target=Requirement Autopilot" >> $GITHUB_OUTPUT
+              ;;
             Coding)
               echo "url=${{ secrets.CODING_AUTOPILOT_WEBHOOK_URL }}" >> $GITHUB_OUTPUT
               echo "target=Coding Autopilot" >> $GITHUB_OUTPUT
